@@ -1,7 +1,6 @@
 "use server";
 import { signIn, signOut } from "@/auth";
 import { signInFormSchema } from "../validators";
-import { success } from "zod";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
 
 //Sign in the user with credentials
