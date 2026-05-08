@@ -23,7 +23,7 @@ const ShippingAddressPage = async () => {
 
   return (
     <>
-      <CheckoutSteps current={2} />
+      <CheckoutSteps current={1} />
       <ShippingAddressForm />
     </>
   );
