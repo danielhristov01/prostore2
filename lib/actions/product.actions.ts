@@ -1,7 +1,7 @@
 "use server";
 
 import { prisma } from "@/db/prisma";
-import { converToPlainObject } from "../utils";
+import { mapProduct } from "../utils";
 import { LATEST_PRODUCTS_LIMIT } from "../constants";
 
 export async function getLatestProducts() {
@@ -10,11 +10,13 @@ export async function getLatestProducts() {
     orderBy: { createdAt: "desc" },
   });
 
-  return converToPlainObject(data);
+  return data.map(mapProduct);
 }
 
 export async function getProductBySlug(slug: string) {
-  return await prisma.product.findFirst({
+  const product = await prisma.product.findFirst({
     where: { slug: slug },
   });
+
+  return product ? mapProduct(product) : null;
 }

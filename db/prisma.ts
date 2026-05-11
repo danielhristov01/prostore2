@@ -9,19 +9,7 @@ const adapter = new PrismaNeon({
   connectionString: process.env.DATABASE_URL!,
 });
 
-export const prisma = new PrismaClient({ adapter }).$extends({
-  result: {
-    product: {
-      price: {
-        compute(product) {
-          return product.price.toString();
-        },
-      },
-      rating: {
-        compute(product) {
-          return product.rating.toString();
-        },
-      },
-    },
-  },
-});
+// Decimal columns stay as Prisma's `runtime.Decimal` here — server actions
+// use the `mapXxx` helpers in `lib/utils.ts` to convert them to plain strings
+// at the RSC boundary.
+export const prisma = new PrismaClient({ adapter });

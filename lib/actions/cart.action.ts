@@ -1,7 +1,7 @@
 "use server";
 import { cookies } from "next/headers";
 import { CartItem } from "@/types";
-import { converToPlainObject, formatError, round2 } from "../utils";
+import { formatError, mapCart, round2 } from "../utils";
 import { auth } from "@/auth";
 import { prisma } from "@/db/prisma";
 import { cartItemSchema, insertCartSchema } from "../validators";
@@ -131,15 +131,8 @@ export async function getMyCart() {
 
   if (!cart) return undefined;
 
-  //Convert decimals and return
-  return converToPlainObject({
-    ...cart,
-    items: cart.items as CartItem[],
-    itemsPrice: cart.itemsPrice.toString(),
-    totalPrice: cart.totalPrice.toString(),
-    shippingPrice: cart.shippingPrice.toString(),
-    taxPrice: cart.taxPrice.toString(),
-  });
+  // Convert Decimal columns to strings so the cart is RSC-serializable.
+  return mapCart(cart);
 }
 
 export async function removeItemFromCart(productId: string) {
