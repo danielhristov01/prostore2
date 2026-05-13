@@ -18,6 +18,8 @@ const OrderDetailsPage = async (props: {
   const order = await getOrderById(id);
   if (!order) notFound();
 
+  console.log("paypal id present?", !!process.env.PAYPAL_CLIENT_ID);
+  console.log("paypal id value:", process.env.PAYPAL_CLIENT_ID?.slice(0, 8));
   return (
     <>
       <OrderDetailsTable
@@ -25,6 +27,7 @@ const OrderDetailsPage = async (props: {
           ...order,
           shippingAddress: order.shippingAddress as ShippingAddress,
         }}
+        paypalClientId={process.env.PAYPAL_CLIENT_ID || "sb"}
       />
     </>
   );

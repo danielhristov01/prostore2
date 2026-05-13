@@ -13,7 +13,7 @@ const PlaceOrderButton = () => {
         <Loader className="w-4 h-4 animate-spin" />
       ) : (
         <Check className="w-4 h-5" />
-      )}{" "}
+      )}
       Place Order
     </Button>
   );
