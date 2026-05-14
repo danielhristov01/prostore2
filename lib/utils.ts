@@ -7,6 +7,8 @@ import type {
   Prisma,
 } from "@/lib/generated/prisma/client";
 import type { CartItem } from "@/types";
+import qs from "query-string";
+import { ReactJsxRuntime } from "next/dist/server/route-modules/app-page/vendored/rsc/entrypoints";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -183,4 +185,26 @@ export function mapOrder(order: OrderWithDetails) {
     totalPrice: order.totalPrice.toString(),
     orderitems: order.orderitems.map(mapOrderItem),
   };
+}
+
+export function formUrlQuery({
+  params,
+  key,
+  value,
+}: {
+  params: string;
+  key: string;
+  value: string | null;
+}) {
+  const query = qs.parse(params);
+  query[key] = value;
+  return qs.stringifyUrl(
+    {
+      url: window.location.pathname,
+      query,
+    },
+    {
+      skipNull: true,
+    },
+  );
 }
