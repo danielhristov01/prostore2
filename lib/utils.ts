@@ -8,7 +8,6 @@ import type {
 } from "@/lib/generated/prisma/client";
 import type { CartItem } from "@/types";
 import qs from "query-string";
-import { ReactJsxRuntime } from "next/dist/server/route-modules/app-page/vendored/rsc/entrypoints";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -74,6 +73,11 @@ export function formatCurrency(amount: number | string | null) {
   } else {
     return "NaN";
   }
+}
+// Format Number
+const NUMBER_FORMATER = new Intl.NumberFormat("en-Us");
+export function formatNumber(number: number) {
+  return NUMBER_FORMATER.format(number);
 }
 
 //Shorten the Uuid
