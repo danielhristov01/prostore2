@@ -9,6 +9,15 @@ const lanIp = pickLanIp();
 
 const nextConfig: NextConfig = {
   allowedDevOrigins: lanIp ? [lanIp] : [],
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "utfs.io",
+        port: "",
+      },
+    ],
+  },
 };
 
 export default nextConfig;
