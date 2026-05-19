@@ -7,10 +7,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import {
   Controller,
-  ControllerRenderProps,
   Resolver,
   SubmitHandler,
   useForm,
+  useWatch,
 } from "react-hook-form";
 import z from "zod";
 import {
@@ -81,10 +81,9 @@ const ProductForm = ({
       router.push("/admin/products");
     }
   };
-
-  const images = form.watch("images");
-  const IsFeatured = form.watch("isFeatured");
-  const banner = form.watch("banner");
+  const images = useWatch({ control: form.control, name: "images" });
+  const IsFeatured = useWatch({ control: form.control, name: "isFeatured" });
+  const banner = useWatch({ control: form.control, name: "banner" });
 
   return (
     <FieldSet>
@@ -98,20 +97,15 @@ const ProductForm = ({
           <Controller
             control={form.control}
             name="name"
-            render={({
-              field,
-            }: {
-              field: ControllerRenderProps<
-                z.infer<typeof insertProductSchema>,
-                "name"
-              >;
-            }) => (
+            render={({ field, fieldState }) => (
               <Field>
                 <FieldLabel>Name</FieldLabel>
                 <FieldContent>
                   <Input placeholder="Enter product name" {...field} />
                 </FieldContent>
-                <FieldError />
+                <FieldError
+                  errors={fieldState.error ? [fieldState.error] : []}
+                />
               </Field>
             )}
           />
@@ -119,14 +113,7 @@ const ProductForm = ({
           <Controller
             control={form.control}
             name="slug"
-            render={({
-              field,
-            }: {
-              field: ControllerRenderProps<
-                z.infer<typeof insertProductSchema>,
-                "slug"
-              >;
-            }) => (
+            render={({ field, fieldState }) => (
               <Field>
                 <FieldLabel>Slug</FieldLabel>
                 <FieldContent>
@@ -146,7 +133,9 @@ const ProductForm = ({
                     </Button>
                   </div>
                 </FieldContent>
-                <FieldError />
+                <FieldError
+                  errors={fieldState.error ? [fieldState.error] : []}
+                />
               </Field>
             )}
           />
@@ -156,20 +145,15 @@ const ProductForm = ({
           <Controller
             control={form.control}
             name="category"
-            render={({
-              field,
-            }: {
-              field: ControllerRenderProps<
-                z.infer<typeof insertProductSchema>,
-                "category"
-              >;
-            }) => (
+            render={({ field, fieldState }) => (
               <Field>
                 <FieldLabel>Category</FieldLabel>
                 <FieldContent>
                   <Input placeholder="Enter category" {...field} />
                 </FieldContent>
-                <FieldError />
+                <FieldError
+                  errors={fieldState.error ? [fieldState.error] : []}
+                />
               </Field>
             )}
           />
@@ -178,20 +162,15 @@ const ProductForm = ({
           <Controller
             control={form.control}
             name="brand"
-            render={({
-              field,
-            }: {
-              field: ControllerRenderProps<
-                z.infer<typeof insertProductSchema>,
-                "brand"
-              >;
-            }) => (
+            render={({ field, fieldState }) => (
               <Field>
                 <FieldLabel>Brand</FieldLabel>
                 <FieldContent>
                   <Input placeholder="Enter product brand" {...field} />
                 </FieldContent>
-                <FieldError />
+                <FieldError
+                  errors={fieldState.error ? [fieldState.error] : []}
+                />
               </Field>
             )}
           />
@@ -201,20 +180,15 @@ const ProductForm = ({
           <Controller
             control={form.control}
             name="price"
-            render={({
-              field,
-            }: {
-              field: ControllerRenderProps<
-                z.infer<typeof insertProductSchema>,
-                "price"
-              >;
-            }) => (
+            render={({ field, fieldState }) => (
               <Field>
                 <FieldLabel>Price</FieldLabel>
                 <FieldContent>
                   <Input placeholder="0" {...field} />
+                  <FieldError
+                    errors={fieldState.error ? [fieldState.error] : []}
+                  />
                 </FieldContent>
-                <FieldError />
               </Field>
             )}
           />
@@ -222,20 +196,25 @@ const ProductForm = ({
           <Controller
             control={form.control}
             name="stock"
-            render={({
-              field,
-            }: {
-              field: ControllerRenderProps<
-                z.infer<typeof insertProductSchema>,
-                "stock"
-              >;
-            }) => (
+            render={({ field, fieldState }) => (
               <Field>
                 <FieldLabel>Stock</FieldLabel>
                 <FieldContent>
-                  <Input placeholder="Enter product stock" {...field} />
+                  <Input
+                    placeholder="Enter product stock"
+                    type="number"
+                    {...field}
+                    onFocus={(e) => e.target.select()}
+                    onChange={(e) =>
+                      field.onChange(
+                        e.target.value === "" ? "" : e.target.valueAsNumber,
+                      )
+                    }
+                  />
                 </FieldContent>
-                <FieldError />
+                <FieldError
+                  errors={fieldState.error ? [fieldState.error] : []}
+                />
               </Field>
             )}
           />
@@ -330,14 +309,7 @@ const ProductForm = ({
           <Controller
             control={form.control}
             name="description"
-            render={({
-              field,
-            }: {
-              field: ControllerRenderProps<
-                z.infer<typeof insertProductSchema>,
-                "description"
-              >;
-            }) => (
+            render={({ field, fieldState }) => (
               <Field>
                 <FieldLabel>Description</FieldLabel>
                 <FieldContent>
@@ -347,7 +319,9 @@ const ProductForm = ({
                     {...field}
                   />
                 </FieldContent>
-                <FieldError />
+                <FieldError
+                  errors={fieldState.error ? [fieldState.error] : []}
+                />
               </Field>
             )}
           />
