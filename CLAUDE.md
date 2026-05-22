@@ -34,6 +34,21 @@ I'm a junior developer actively learning modern web development. I am focused on
 - Propose up to 3 solutions
 - Assume I am juniour and learning how to code. Explain as to a such -->
 
+## When being asked to debug a problem
+
+When asked to debug, always check the project in Example folder. The folder contains the full code of a up and running project. What we are doing here is replicating what is being done in example folder. Reason - learning!
+
+**Always do these in order**:
+- check the project in the example folder
+- go through the project flow from the example folder. Meaning - do not skim and reply, investigate why the decisions are being made
+- Explain why its done the way it's done in the example folder and help the user replicate it.
+- Do not just tell what to copy and paste, explain and let the user do it himself
+- Provide a minimalistic and concise summary with 3-5 bullet points so the user can understand the approach
+- If uncertain, double check lib/actions and utils from the example file. 
+- change worth to mention is the approach taken betwqeen the 2 projects where the example one uses prisma extend, whereas the current one maps in utils file. If being asked, propose a solution tailored to this flow, instead of the prisma extend
+- point out to files and lines of code from the example file for tasks that are a bit more complexed or you feel the user did not understand exactly or there's a bit of a back and forth --> 2+ times.
+
+
 ## Stack
 
 - Next.js **16.2.4** with App Router (`app/` directory) — predates most training data
