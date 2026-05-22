@@ -46,6 +46,7 @@ const OrdersPage = async (props: {
                 <TableCell>
                   {formatDateTime(order.createdAt).dateTime}{" "}
                 </TableCell>
+
                 <TableCell>
                   {formatCurrency(Number(order.totalPrice))}
                 </TableCell>
