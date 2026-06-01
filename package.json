@@ -10,7 +10,8 @@
     "postinstall": "prisma generate",
     "db:seed": "tsx db/seed.ts",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "email": "cpy .env ./node_modules/react-email && email dev --dir email --port 3001"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.2",
@@ -18,6 +19,7 @@
     "@neondatabase/serverless": "^1.1.0",
     "@paypal/react-paypal-js": "^9.2.0",
     "@prisma/adapter-neon": "^7.8.0",
+    "@react-email/components": "^1.0.12",
     "@stripe/react-stripe-js": "^6.4.0",
     "@stripe/stripe-js": "^9.7.0",
     "@uploadthing/react": "^7.3.3",
@@ -34,8 +36,10 @@
     "radix-ui": "^1.4.3",
     "react": "19.2.4",
     "react-dom": "19.2.4",
+    "react-email": "^6.5.0",
     "react-hook-form": "^7.75.0",
     "recharts": "^3.8.1",
+    "resend": "^6.12.4",
     "shadcn": "^4.4.0",
     "slugify": "^1.6.9",
     "sonner": "^2.0.7",
@@ -49,6 +53,7 @@
   },
   "devDependencies": {
     "@prisma/client": "^7.8.0",
+    "@react-email/ui": "^6.5.0",
     "@tailwindcss/postcss": "^4",
     "@types/jest": "^30.0.0",
     "@types/node": "^20.19.40",
@@ -56,6 +61,7 @@
     "@types/react-dom": "^19",
     "@types/ws": "^8.18.1",
     "bufferutil": "^4.1.0",
+    "cpy-cli": "^7.0.0",
     "dotenv": "^17.4.2",
     "eslint": "^9",
     "eslint-config-next": "16.2.4",

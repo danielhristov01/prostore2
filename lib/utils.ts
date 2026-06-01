@@ -6,7 +6,7 @@ import type {
   Product as PrismaProduct,
   Prisma,
 } from "@/lib/generated/prisma/client";
-import type { CartItem } from "@/types";
+import type { CartItem, PaymentResult, ShippingAddress } from "@/types";
 import qs from "query-string";
 
 export function cn(...inputs: ClassValue[]) {
@@ -188,6 +188,8 @@ export function mapOrder(order: OrderWithDetails) {
     taxPrice: order.taxPrice.toString(),
     totalPrice: order.totalPrice.toString(),
     orderitems: order.orderitems.map(mapOrderItem),
+    shippingAddress: order.shippingAddress as ShippingAddress,
+    paymentResult: order.paymentResult as PaymentResult,
   };
 }
 

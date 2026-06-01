@@ -12,6 +12,7 @@ import { paypal } from "../constants/paypal";
 import { revalidatePath } from "next/cache";
 import { PAGE_SIZE } from "../constants";
 import { Prisma } from "../generated/prisma/client";
+import { sendPurchaseReceipt } from "@/email";
 
 //Create order and create the order items
 
@@ -246,6 +247,7 @@ export async function updateOrderToPaid({
     },
   });
   if (!updatedOrder) throw new Error("Order not found");
+  sendPurchaseReceipt({ order: mapOrder(updatedOrder) });
 }
 
 //Get the users orders
