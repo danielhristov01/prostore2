@@ -1,0 +1,2 @@
+- [Codebase Architecture](codebase-architecture.md) — Stack, module layout, and key existing abstractions
+- [Audit Findings Jun 2026](audit-findings-jun2026.md) — First audit findings: auth pattern, user lookup, admin pages, nav duplication
