@@ -25,8 +25,7 @@ export const metadata: Metadata = {
 };
 
 const PlaceOrderPage = async () => {
-  const cart = await getMyCart();
-  const session = await auth();
+  const [session, cart] = await Promise.all([auth(), getMyCart()]);
   const userId = session?.user?.id;
   if (!userId) throw new Error("user not found");
 

@@ -71,10 +71,18 @@ export async function getAllProducts({
           },
         }
       : {};
+  const ORDER_BY = {
+    lowest: { price: "asc" },
+    highest: { price: "desc" },
+    rating: { rating: "desc" },
+  } as const;
+  const orderBy = ORDER_BY[sort as keyof typeof ORDER_BY] ?? {
+    createdAt: "desc",
+  };
 
   //Filter rating
 
-  const ratingFiltert =
+  const ratingFilter =
     rating && rating !== "all"
       ? {
           rating: {
@@ -87,16 +95,9 @@ export async function getAllProducts({
       ...queryFilter,
       ...categoryFilter,
       ...priceFilter,
-      ...ratingFiltert,
+      ...ratingFilter,
     },
-    orderBy:
-      sort === "lowest"
-        ? { price: "asc" }
-        : sort === "highest"
-        ? { price: "desc" }
-        : sort === "rating"
-        ? { rating: "desc" }
-        : { createdAt: "desc" },
+    orderBy,
     skip: (page - 1) * limit,
     take: limit,
   });

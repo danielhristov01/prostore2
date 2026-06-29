@@ -8,8 +8,10 @@ import {
   getLatestProducts,
 } from "@/lib/actions/product.actions";
 const Homepage = async () => {
-  const latestProducts = await getLatestProducts();
-  const featuredProducts = await getFeaturedProducts();
+  const [latestProducts, featuredProducts] = await Promise.all([
+    getLatestProducts(),
+    getFeaturedProducts(),
+  ]);
 
   return (
     <>

@@ -44,7 +44,9 @@ export async function signInWithCredentials(
 
 export async function signOutUser() {
   const currentCart = await getMyCart();
-  await prisma.cart.delete({ where: { id: currentCart?.id } });
+  if (currentCart?.id) {
+    await prisma.cart.delete({ where: { id: currentCart.id } });
+  }
   await signOut();
 }
 
@@ -230,7 +232,7 @@ export async function updateUser(user: z.infer<typeof updateUserSchema>) {
 
     revalidatePath("/admin/user");
 
-    return { success: true, message: "User update successffully" };
+    return { success: true, message: "User updated successfully" };
   } catch (error) {
     return { success: false, message: formatError(error) };
   }

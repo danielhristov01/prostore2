@@ -1,3 +1,5 @@
+"use client";
+
 import { loadStripe } from "@stripe/stripe-js";
 import {
   Elements,
@@ -12,6 +14,12 @@ import { Button } from "@/components/ui/button";
 import { formatCurrency } from "@/lib/utils";
 import { SERVER_URL } from "@/lib/constants";
 
+// loadStripe must run once, at module scope. Calling it in the component body
+// would create a new Stripe instance on every render.
+const stripePromise = loadStripe(
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string,
+);
+
 const StripeForm = ({
   priceInCents,
   orderId,
@@ -23,11 +31,10 @@ const StripeForm = ({
   const elements = useElements();
   const [isLoading, setIsloading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [email, setEmail] = useState(false);
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
-    if (stripe == null || elements == null || email == null) return;
+    if (stripe == null || elements == null) return;
     setIsloading(true);
 
     stripe
@@ -56,7 +63,7 @@ const StripeForm = ({
       {errorMessage && <div className="text-destructive">{errorMessage}</div>}
       <PaymentElement />
       <div>
-        <LinkAuthenticationElement onChange={() => setEmail(true)} />
+        <LinkAuthenticationElement />
       </div>
       <Button
         className="w-full "
@@ -80,24 +87,18 @@ const StripePayment = ({
   orderId: string;
   clientSecret: string;
 }) => {
-  const stripePromise = loadStripe(
-    process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string,
-  );
   const { theme, systemTheme } = useTheme();
+  // Resolve "system" down to the real theme, then map dark -> night, else stripe.
+  const resolvedTheme =
+    theme === "light" || theme === "dark" ? theme : systemTheme;
+  const appearanceTheme = resolvedTheme === "dark" ? "night" : "stripe";
 
   return (
     <Elements
       options={{
         clientSecret,
         appearance: {
-          theme:
-            theme === "dark"
-              ? "night"
-              : theme === "light"
-                ? "stripe"
-                : systemTheme === "light"
-                  ? "stripe"
-                  : "night",
+          theme: appearanceTheme,
         },
       }}
       stripe={stripePromise}

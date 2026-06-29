@@ -8,12 +8,14 @@ import type {
 } from "@/lib/generated/prisma/client";
 import type { CartItem, PaymentResult, ShippingAddress } from "@/types";
 import qs from "query-string";
+import { ZodError } from "zod";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/client";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function converToPlainObject<T>(value: T): T {
+export function convertToPlainObject<T>(value: T): T {
   return JSON.parse(JSON.stringify(value));
 }
 
@@ -23,9 +25,8 @@ export function formatNumberWithDecimal(num: number): string {
 }
 
 //Format errors
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function formatError(error: any) {
-  if (error.name === "ZodError") {
+export function formatError(error: unknown) {
+  if (error instanceof ZodError) {
     //Handle Zod error
     const fieldErrors = error.issues.map(
       (issue: { message: string }) => issue.message,
@@ -33,15 +34,18 @@ export function formatError(error: any) {
 
     return fieldErrors.join(". ");
   } else if (
-    error.name === "PrismaClientKnownRequestError" &&
+    error instanceof PrismaClientKnownRequestError &&
     error.code === "P2002"
   ) {
-    const field = error.meta?.target ? error.meta.target[0] : "Field";
+    const target = error.meta?.target;
+    const field = Array.isArray(target) ? String(target[0]) : "Field";
     return `${field.charAt(0).toUpperCase() + field.slice(1)} already exists`;
-  } else {
+  } else if (error instanceof Error) {
     return typeof error.message === "string"
       ? error.message
       : JSON.stringify(error.message);
+  } else {
+    return typeof error === "string" ? error : JSON.stringify(error);
   }
 }
 

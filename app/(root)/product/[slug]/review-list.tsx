@@ -2,7 +2,7 @@
 
 import { Review } from "@/types";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import ReviewForm from "./review-form";
 import { getReviews } from "@/lib/actions/review.actions";
 import {
@@ -20,22 +20,14 @@ const ReviewList = ({
   userId,
   productId,
   productSlug,
+  initialReviews,
 }: {
   userId: string;
   productId: string;
   productSlug: string;
+  initialReviews: Review[];
 }) => {
-  const [reviews, setReviews] = useState<Review[]>([]);
-
-  useEffect(() => {
-    const loadReviews = async function () {
-      const res = await getReviews({ productId });
-      setReviews(res.data);
-    };
-
-    loadReviews();
-  }, [productId]);
-
+  const [reviews, setReviews] = useState<Review[]>(initialReviews);
   const reload = async () => {
     const res = await getReviews({ productId });
     setReviews([...res.data]);

@@ -11,7 +11,7 @@ type PaginationProps = {
 
 const Pagination = ({ page, totalPages, urlParamName }: PaginationProps) => {
   const router = useRouter();
-  const searchParams = useSearchParams;
+  const searchParams = useSearchParams();
 
   const handleClick = (btnType: string) => {
     const pageValue = btnType === "next" ? Number(page) + 1 : Number(page) - 1;

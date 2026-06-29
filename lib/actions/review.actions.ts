@@ -14,7 +14,7 @@ export async function createUpdateReview(
 ) {
   try {
     const session = await auth();
-    if (!session) throw new Error("User is not Authenti cated");
+    if (!session) throw new Error("User is not Authenticated");
 
     //Validate and store the review
 

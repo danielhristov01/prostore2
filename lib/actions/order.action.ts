@@ -136,7 +136,8 @@ export async function createPayPalOrder(orderId: string) {
           paymentResult: {
             id: paypalOrder.id,
             email_address: "",
-            pricePaid: 0,
+            pricePaid: "0",
+            status: "PENDING",
           },
         },
       });
@@ -283,33 +284,36 @@ type SalesDataType = {
 //Get sales data and order summary
 export async function getOrderSummary() {
   //Get counts for each resouce
-  const orderCount = await prisma.order.count();
-  const productCount = await prisma.product.count();
-  const usersCount = await prisma.user.count();
-  //Calculate the total sales
 
-  const totalSales = await prisma.order.aggregate({
-    _sum: { totalPrice: true },
-  });
-
-  //Get mountly sales
-  const salesDataRaw = await prisma.$queryRaw<
-    Array<{ month: string; totalSales: Prisma.Decimal }>
-  >`SELECT to_char("createdAt",'MM/YY') as "month",sum("totalPrice") as "totalSales" FROM "Order" GROUP BY to_char("createdAt", 'MM/YY')`;
+  const [
+    orderCount,
+    productCount,
+    usersCount,
+    totalSales,
+    salesDataRaw,
+    latestSales,
+  ] = await Promise.all([
+    prisma.order.count(),
+    prisma.product.count(),
+    prisma.user.count(),
+    prisma.order.aggregate({ _sum: { totalPrice: true } }),
+    prisma.$queryRaw<
+      Array<{ month: string; totalSales: Prisma.Decimal }>
+    >`SELECT to_char("createdAt",'MM/YY') as "month",sum("totalPrice") as "totalSales" FROM "Order" GROUP BY to_char("createdAt", 'MM/YY')`,
+    prisma.order.findMany({
+      orderBy: { createdAt: "desc" },
+      include: {
+        user: { select: { name: true } },
+      },
+      take: 6,
+    }),
+  ]);
 
   const salesData: SalesDataType = salesDataRaw.map((entry) => ({
     month: entry.month,
     totalSales: Number(entry.totalSales),
   }));
   // Get latest sales
-
-  const latestSales = await prisma.order.findMany({
-    orderBy: { createdAt: "desc" },
-    include: {
-      user: { select: { name: true } },
-    },
-    take: 6,
-  });
 
   return {
     orderCount,

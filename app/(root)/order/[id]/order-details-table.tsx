@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/static-components */
 "use client";
 
 import { Badge } from "@/components/ui/badge";
@@ -31,6 +30,60 @@ import { useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import StripePayment from "./stripe-payment";
 
+const PrintLoadingState = () => {
+  const [{ isPending, isRejected }] = usePayPalScriptReducer();
+  let status = "";
+  if (isPending) {
+    status = "Loading PayPal...";
+  } else if (isRejected) {
+    status = "Error Loading PayPal";
+  }
+  return status;
+};
+
+const MarkAsPaidButton = ({ orderId }: { orderId: string }) => {
+  const [isPending, startTransition] = useTransition();
+  return (
+    <Button
+      type="button"
+      disabled={isPending}
+      onClick={() =>
+        startTransition(async () => {
+          const res = await updateOrderToPaidCOD(orderId);
+          if (!res.success) {
+            toast.error(res.message);
+          } else {
+            toast.success(res.message);
+          }
+        })
+      }
+    >
+      {isPending ? "Processing..." : "Mark As Paid"}
+    </Button>
+  );
+};
+
+const MarkAsDeliveredButton = ({ orderId }: { orderId: string }) => {
+  const [isPending, startTransition] = useTransition();
+  return (
+    <Button
+      type="button"
+      disabled={isPending}
+      onClick={() =>
+        startTransition(async () => {
+          const res = await deliverOrder(orderId);
+          if (!res.success) {
+            toast.error(res.message);
+          } else {
+            toast.success(res.message);
+          }
+        })
+      }
+    >
+      {isPending ? "Processing..." : "Mark As Delivered"}
+    </Button>
+  );
+};
 const OrderDetailsTable = ({
   order,
   paypalClientId,
@@ -56,17 +109,6 @@ const OrderDetailsTable = ({
     deliveredAt,
   } = order;
 
-  const PrintLoadingState = () => {
-    const [{ isPending, isRejected }] = usePayPalScriptReducer();
-    let status = "";
-    if (isPending) {
-      status = "Loading PayPal...";
-    } else if (isRejected) {
-      status = "Error Loading PayPal";
-    }
-    return status;
-  };
-
   const handleCreatePayPalOrder = async () => {
     const res = await createPayPalOrder(order.id);
     if (!res.success) {
@@ -85,49 +127,6 @@ const OrderDetailsTable = ({
     } else {
       toast.success(res.message);
     }
-  };
-
-  const MarkAsPaidButton = () => {
-    const [isPending, startTransition] = useTransition();
-    return (
-      <Button
-        type="button"
-        disabled={isPending}
-        onClick={() =>
-          startTransition(async () => {
-            const res = await updateOrderToPaidCOD(order.id);
-            if (!res.success) {
-              toast.error(res.message);
-            } else {
-              toast.success(res.message);
-            }
-          })
-        }
-      >
-        {isPending ? "Processing..." : "Mark As Paid"}
-      </Button>
-    );
-  };
-  const MarkAsDeliveredButton = () => {
-    const [isPending, startTransition] = useTransition();
-    return (
-      <Button
-        type="button"
-        disabled={isPending}
-        onClick={() =>
-          startTransition(async () => {
-            const res = await deliverOrder(order.id);
-            if (!res.success) {
-              toast.error(res.message);
-            } else {
-              toast.success(res.message);
-            }
-          })
-        }
-      >
-        {isPending ? "Processing..." : "Mark As Delivered"}
-      </Button>
-    );
   };
 
   return (
@@ -253,10 +252,12 @@ const OrderDetailsTable = ({
 
               {/* COD */}
               {isAdmin && !isPaid && paymentMethod === "CashOnDelivery" && (
-                <MarkAsPaidButton />
+                <MarkAsPaidButton orderId={order.id} />
               )}
 
-              {isAdmin && isPaid && !isDelivered && <MarkAsDeliveredButton />}
+              {isAdmin && isPaid && !isDelivered && (
+                <MarkAsDeliveredButton orderId={order.id} />
+              )}
             </CardContent>
           </Card>
         </div>

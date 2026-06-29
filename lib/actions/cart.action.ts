@@ -67,7 +67,7 @@ export async function addItemToCart(data: CartItem) {
     } else {
       //Check if item already in the cart
 
-      const existItem = (cart.items as CartItem[]).find(
+      const existItem = cart.items.find(
         (x) => x.productId === item.productId,
       );
 
@@ -78,9 +78,7 @@ export async function addItemToCart(data: CartItem) {
         }
         //Increace the qty
 
-        (cart.items as CartItem[]).find(
-          (x) => x.productId === item.productId,
-        )!.qty = existItem.qty + 1;
+        existItem.qty = existItem.qty + 1;
       } else {
         // If item does not exist in the cart
         //Check the stock
@@ -92,7 +90,7 @@ export async function addItemToCart(data: CartItem) {
         where: { id: cart.id },
         data: {
           items: cart.items as Prisma.CartUpdateitemsInput[],
-          ...calcPrice(cart.items as CartItem[]),
+          ...calcPrice(cart.items),
         },
       });
       revalidatePath(`/product/${product.slug}`);
@@ -102,11 +100,6 @@ export async function addItemToCart(data: CartItem) {
         message: `${product.name} ${existItem ? "updated in" : "added to"} cart`,
       };
     }
-
-    return {
-      success: true,
-      message: "Item added to cart",
-    };
   } catch (error) {
     return {
       success: false,
@@ -153,7 +146,7 @@ export async function removeItemFromCart(productId: string) {
     if (!cart) throw new Error("Cart not found");
 
     // Check for item
-    const exist = (cart.items as CartItem[]).find(
+    const exist = cart.items.find(
       (x) => x.productId === productId,
     );
     if (!exist) throw new Error("Item not found");
@@ -161,13 +154,13 @@ export async function removeItemFromCart(productId: string) {
     //Check if only one in qty
     if (exist.qty === 1) {
       //Remove from cart
-      cart.items = (cart.items as CartItem[]).filter(
+      cart.items = (cart.items).filter(
         (x) => x.productId !== exist.productId,
       );
     } else {
       //Decrease qty
 
-      (cart.items as CartItem[]).find((x) => x.productId === productId)!.qty =
+      (cart.items).find((x) => x.productId === productId)!.qty =
         exist.qty - 1;
     }
     //Update cart in database
@@ -176,7 +169,7 @@ export async function removeItemFromCart(productId: string) {
       where: { id: cart.id },
       data: {
         items: cart.items as Prisma.CartUpdateitemsInput[],
-        ...calcPrice(cart.items as CartItem[]),
+        ...calcPrice(cart.items),
       },
     });
 

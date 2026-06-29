@@ -51,9 +51,6 @@ export async function generateMetadata(props: {
       title: "Search Products",
     };
   }
-  return {
-    title: "Search",
-  };
 }
 
 const SearchPage = async (props: {
@@ -191,9 +188,9 @@ const SearchPage = async (props: {
         <div className="flex-between flex-col md:flex-row my-4">
           <div className="flex items-center">
             {q !== "all" && q !== "" && "Query: " + q}
-            {category !== "all" && category !== "" && "Query: " + category}
+            {category !== "all" && category !== "" && "Category: " + category}
             {price !== "all" && "Price: " + price}
-            {rating !== "all" && "Rating: " + rating + " stars S& up"}
+            {rating !== "all" && "Rating: " + rating + " stars & up"}
             &nbsp;
             {(q !== "all" && q !== "") ||
             (category !== "all" && category !== "") ||

@@ -56,9 +56,9 @@ export const config = {
     }),
   ],
   callbacks: {
-    async session({ session, user, trigger, token }: any) {
+    async session({ session, user, trigger, token }) {
       //Set the user ID from the token
-      session.user.id = token.sub;
+      session.user.id = token.id;
       session.user.role = token.role;
       session.user.name = token.name;
 
@@ -68,10 +68,10 @@ export const config = {
       }
       return session;
     },
-    async jwt({ token, user, trigger, session }: any) {
+    async jwt({ token, user, trigger, session }) {
       //Asign user fields to token
       if (user) {
-        token.id = user.id;
+        token.id = user.id!;
         token.role = user.role;
 
         //If user has no name then use the email
@@ -107,10 +107,6 @@ export const config = {
         }
       }
 
-      if (session?.user.name && trigger === "update") {
-        token.name = session.use.name;
-      }
-
       //  Handle session updates
 
       if (session?.user.name && trigger === "update") {
@@ -119,7 +115,7 @@ export const config = {
 
       return token;
     },
-    authorized({ request, auth }: any) {
+    authorized({ request, auth }) {
       //Array of rregex patterns of paths we want to protect
 
       const protectedPaths = [

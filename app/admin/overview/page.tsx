@@ -1,4 +1,3 @@
-import { auth } from "@/auth";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
@@ -24,8 +23,6 @@ const AdminOverviewPage = async () => {
   await requireAdmin();
 
   const summary = await getOrderSummary();
-
-  console.log(summary);
 
   return (
     <div className="space-y-2">

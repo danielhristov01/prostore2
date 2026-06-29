@@ -9,6 +9,7 @@ import { getProductBySlug } from "@/lib/actions/product.actions";
 import { notFound } from "next/navigation";
 import ReviewList from "./review-list";
 import Rating from "@/components/shared/product/rating";
+import { getReviews } from "@/lib/actions/review.actions";
 
 const ProductDetailsPage = async (props: {
   params: Promise<{ slug: string }>;
@@ -17,10 +18,10 @@ const ProductDetailsPage = async (props: {
 
   const product = await getProductBySlug(slug);
   if (!product) notFound();
-  const session = await auth();
+  const [session, cart] = await Promise.all([auth(), getMyCart()]);
   const userId = session?.user?.id;
 
-  const cart = await getMyCart();
+  const { data: reviews } = await getReviews({ productId: product.id });
 
   return (
     <>
@@ -96,6 +97,7 @@ const ProductDetailsPage = async (props: {
           userId={userId || ""}
           productId={product.id}
           productSlug={product.slug}
+          initialReviews={reviews}
         />
       </section>
     </>

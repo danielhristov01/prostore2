@@ -92,32 +92,42 @@ const ReviewForm = ({
                 <Controller
                   control={form.control}
                   name="title"
-                  render={({ field }) => (
+                  render={({ field, fieldState }) => (
                     <Field>
                       <FieldLabel>Title</FieldLabel>
                       <Input placeholder="Enter title" {...field} />
+                      {fieldState.error && (
+                        <p className="text-sm text-red-500">
+                          {fieldState.error.message}
+                        </p>
+                      )}
                     </Field>
                   )}
                 />
                 <Controller
                   control={form.control}
                   name="description"
-                  render={({ field }) => (
+                  render={({ field, fieldState }) => (
                     <Field>
                       <FieldLabel>Description</FieldLabel>
                       <Textarea placeholder="Enter description" {...field} />
+                      {fieldState.error && (
+                        <p className="text-sm text-red-500">
+                          {fieldState.error.message}
+                        </p>
+                      )}
                     </Field>
                   )}
                 />
                 <Controller
                   control={form.control}
                   name="rating"
-                  render={({ field }) => (
+                  render={({ field, fieldState }) => (
                     <Field>
                       <FieldLabel>Rating</FieldLabel>
                       <Select
-                        onValueChange={field.onChange}
-                        value={field.value.toString()}
+                        onValueChange={(val) => field.onChange(Number(val))}
+                        value={field.value ? field.value.toString() : ""}
                       >
                         <SelectTrigger>
                           <SelectValue />
@@ -133,6 +143,11 @@ const ReviewForm = ({
                           ))}
                         </SelectContent>
                       </Select>
+                      {fieldState.error && (
+                        <p className="text-sm text-red-500">
+                          {fieldState.error.message}
+                        </p>
+                      )}
                     </Field>
                   )}
                 />

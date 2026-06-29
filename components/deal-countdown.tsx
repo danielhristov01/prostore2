@@ -40,8 +40,8 @@ const DealCountdown = () => {
       ) {
         clearInterval(timerInterval);
       }
-      return () => clearInterval(timerInterval);
     }, 1000);
+    return () => clearInterval(timerInterval);
   }, []);
   if (!time) {
     return (
@@ -63,7 +63,7 @@ const DealCountdown = () => {
         <div className="flex flex-col gap-2 justify-center">
           <h3 className="text-3xl font-bold">Deal Has Ended</h3>
           <p>
-            This deal is no longer availble.Check out our latest promotions!
+            This deal is no longer available. Check out our latest promotions!
           </p>
           <div className="text-center">
             <Button>
@@ -90,8 +90,8 @@ const DealCountdown = () => {
         <p>
           Get ready for a shopping experience like never before with our Deals
           of the Month! Every purchase comes with exclusive perks and
-          offers,making this month a celevration of savvy choices and amazing
-          deals.Dont&apos;t miss out!🎁
+          offers, making this month a celebration of savvy choices and amazing
+          deals. Don&apos;t miss out!🎁
         </p>
         <ul className="grid grid-cols-4">
           <StatBox label="Days" value={time.days} />

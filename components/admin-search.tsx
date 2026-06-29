@@ -1,23 +1,25 @@
 "use client";
 
 import { usePathname, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Input } from "./ui/input";
 
 const AdminSearch = () => {
+  const searchParams = useSearchParams();
+  return <SearchForm key={searchParams.get("query") ?? ""} />;
+};
+
+const SearchForm = () => {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const formActionUrl = pathname.includes("/admin/orders")
     ? "/admin/orders"
     : pathname.includes("/admin/users")
       ? "/admin/users"
       : "/admin/products";
 
-  const searchParams = useSearchParams();
   const [queryValue, setQueryValue] = useState(searchParams.get("query") || "");
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setQueryValue(searchParams.get("query") || "");
-  }, [searchParams]);
+
   return (
     <form action={formActionUrl} method="GET">
       <Input
